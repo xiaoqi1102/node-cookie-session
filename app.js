@@ -18,6 +18,8 @@ app.use(session({
     saveUninitialized:true
 }));
 app.use((req,res,next)=>{
+    //突然想到中间件拦截了会怎样
+    //res.render(path.join(__dirname,'/index.jade'),{h1:'我就是拦截你了咋地'});
    let {views}=req.session;
    if (!views){
        views=req.session.views={}
