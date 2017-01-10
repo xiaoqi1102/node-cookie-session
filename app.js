@@ -2,51 +2,41 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 import path from 'path';
-var session =require('express-session') ;
+import  session from 'express-session' ;
 import xlsx from 'node-xlsx';
-
+import parseUrl from 'parseUrl';
 //var redisStore =require('connect-redis')(session);
 const app =express();
 const port =3000;
-app.set('view engine','jade')
+//模板
+app.set('view engine','jade');
 app.use(cookieParser());
 app.use(BodyParser());
 app.use(session({
-    //store:new redisStore(),
-    secret:'somesecretoken',
+    secret:'keyboard cat',
     resave:false,
-    saveUninitialized:true,
-    cookie:{secure:true}
-
+    saveUninitialized:true
 }));
+app.use((req,res,next)=>{
+   let {views}=req.session;
+   if (!views){
+       views=req.session.views={}
+   }
+   let  pathname=parseUrl(req).pathname;
+   views[pathname]=(views[pathname]||0)+1;
+   next();
+});
 app.get('/',(req,res)=>{
     res.set({'Accept-Charset':'utf-8'});
     console.log(req.session);
-    let h1='hello';
-   /*
-   *  if(req.session.isVisit){
-    req.session.isVisit++;
-    //res.send(`<p>第${isVisit}次来到此页面`)
-    h1=`第${isVisit}次来到此页面`;
-    }else {
-    req.session.isVisit=1;
-    h1=`欢迎第一次访问此页面`;
-    //res.send('欢迎第一次访问此页面')
-    }
-   * */
-    app.set('trust proxy', 1)
+    let {
+        session:{
+            views
+        }
+    }=req;
+    console.log(views);
+    let h1=`hello 小齐,发现你是第${views['/']}次访问网站`;
     res.render(path.join(__dirname,'/index.jade'),{h1});
-   /*
-   *  if(req.session.isVisit){
-    req.session.isVisit++;
-    res.send(`<p>第${isVisit}次来到此页面`)
-    }else {
-    req.session.isVisit=1;
-    res.send('欢迎第一次访问此页面')
-    }
-   * */
-   // res.cookie('isVisit',true,{maxAge:60*1000});
-    //
 
 });
 app.get('/file.xlsx',(req,res)=>{
