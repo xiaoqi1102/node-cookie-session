@@ -2,15 +2,16 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 import path from 'path';
-var session =require('express-session') ;
+import session from 'express-session' ;
 import xlsx from 'node-xlsx';
-
+let pub=__dirname;
 //var redisStore =require('connect-redis')(session);
 const app =express();
 const port =3000;
-app.set('view engine','jade')
+app.set('view engine','jade');
 app.use(cookieParser());
 app.use(BodyParser());
+app.use(express.static(pub));
 app.use(session({
     //store:new redisStore(),
     secret:'somesecretoken',
