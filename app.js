@@ -2,10 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 import path from 'path';
-
+import * as d3 from 'd3';
 import  session from 'express-session' ;
 import xlsx from 'node-xlsx';
 import parseUrl from 'parseUrl';
+import  fs from 'fs';
 //var redisStore =require('connect-redis')(session);
 const app =express();
 const port =3000;
@@ -14,7 +15,7 @@ const port =3000;
 app.set('view engine','jade');
 app.use(cookieParser());
 app.use(BodyParser());
-app.use(express.static(pub));
+//app.use(express.static(pub));
 app.use(session({
     secret:'keyboard cat',
     resave:false,
@@ -30,6 +31,29 @@ app.use((req,res,next)=>{
    let  pathname=parseUrl(req).pathname;
    views[pathname]=(views[pathname]||0)+1;
    next();
+});
+app.get('/svg',(req,res)=>{
+    let svg=d3.svg;
+    console.log(svg)
+    let  line = svg.append('line').attr('x1',100).attr('y1',100).style({fill:'none',stroke:'#000'});
+    res.send(line)
+});
+app.get('/ecg',(req,res)=>{
+    fs.readFile('.data/ecg.bin',(err,buffer)=>{
+        let  ecg = [];
+        for(let  i = 0; i < buffer.byteLength / 2; i++) {
+            //
+
+            let number= buffer.readInt16BE(i * 2)/ 2048;
+            if (i==1){
+                console.log(number)
+            }
+            // console.log(number);
+            ecg.push([i, number])
+        }
+        ecg = ecg.slice(0, 20000);
+
+    });
 });
 app.get('/',(req,res)=>{
     res.set({'Accept-Charset':'utf-8'});
