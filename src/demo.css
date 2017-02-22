@@ -1,0 +1,64 @@
+.chart-histogram {
+    display: block;
+    width: 800px;
+    height: 400px;
+}
+
+.chart-histogram .histogram-line {
+    stroke: #feaaa8;
+    fill: #feaaa8;
+}
+
+.chart-histogram .bar text {
+    fill: white;
+}
+
+.chart-ecg {
+    display: block;
+    width: 800px;
+    height: 240px;
+}
+
+.chart-ecg .background {
+    fill: white;
+    shape-rendering: crispedges;
+}
+
+.chart-ecg .ecg-line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+.chart-ecg .major-grid {
+    stroke: #a0a0a0;
+    stroke-width: 1px;
+}
+
+.chart-ecg .minor-grid {
+    stroke: #efefef;
+    stroke-width: 0.5px;
+}
+
+.chart-ecg .axis .tick{
+    stroke: white;
+    stroke-width: 0;
+}
+
+.chart-rr {
+    display: block;
+    width: 1000px;
+    height: 600px;
+}
+
+.chart .frame{
+    border: solid 1px black;
+    fill: white;
+    stroke: black;
+    stroke-width: 1px;
+    shape-rendering: crispedges;
+}
+
+.chart .axis text {
+    font-size: 12px;
+}

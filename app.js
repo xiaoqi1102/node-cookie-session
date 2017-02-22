@@ -7,7 +7,9 @@ import  session from 'express-session' ;
 import xlsx from 'node-xlsx';
 import parseUrl from 'parseUrl';
 import  fs from 'fs';
+import jsdom from 'jsdom';
 //var redisStore =require('connect-redis')(session);
+import drawEcg from './drawEcg'
 const app =express();
 const port =3000;
 //模板
@@ -33,13 +35,17 @@ app.use((req,res,next)=>{
    next();
 });
 app.get('/svg',(req,res)=>{
-    let svg=d3.svg;
-    console.log(svg)
-    let  line = svg.append('line').attr('x1',100).attr('y1',100).style({fill:'none',stroke:'#000'});
-    res.send(line)
+    //let svg=d3.svg;
+    let  path = d3.path();
+    path.moveTo(1, 2);
+    path.lineTo(3, 4);
+    path.closePath();
+    console.log(path.toString());
+    res.send(path)
 });
 app.get('/ecg',(req,res)=>{
-    fs.readFile('.data/ecg.bin',(err,buffer)=>{
+    fs.readFile('./data/ecg.bin',(err,buffer)=>{
+       // console.log('global:',global);
         let  ecg = [];
         for(let  i = 0; i < buffer.byteLength / 2; i++) {
             //
@@ -53,6 +59,17 @@ app.get('/ecg',(req,res)=>{
         }
         ecg = ecg.slice(0, 20000);
 
+        jsdom.env({
+            html:'',
+            url: "http://news.ycombinator.com/",
+            features:{ QuerySelector:true }, //you need query selector for D3 to work
+            done:function(errors, window){
+                window.d3 = d3.select(window.document);
+                let svg=drawEcg(ecg,path.resolve(__dirname,'test.svg'),window.d3);
+                //console.log('svg',svg);
+                res.send(svg)
+            }
+        });
     });
 });
 app.get('/',(req,res)=>{
