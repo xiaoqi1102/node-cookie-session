@@ -65,7 +65,7 @@ app.get('/ecg',(req,res)=>{
             features:{ QuerySelector:true }, //you need query selector for D3 to work
             done:function(errors, window){
                 window.d3 = d3.select(window.document);
-                let svg=drawEcg(ecg,path.resolve(__dirname,'test.svg'),window.d3);
+                let svg=drawEcg.writeFile(ecg,path.resolve(__dirname,'test.svg'),window.d3);
                 //console.log('svg',svg);
                 res.send(svg)
             }
