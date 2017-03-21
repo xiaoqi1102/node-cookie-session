@@ -6,8 +6,9 @@ html(lang='en')
         link(href="/src/style.css" rel="stylesheet")
     body
         h1 #{h1}
-        a(href='file.xlsx' download) download file;
-        form#uploadForm
+        //a(href='file.xlsx' download) download file;
+        input(type="file" accept="image/*" capture ="camera" )
+        //form#uploadForm
             input(type="file")
             button(type="submit") 提交
 
